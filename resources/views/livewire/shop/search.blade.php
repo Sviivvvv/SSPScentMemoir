@@ -4,7 +4,7 @@
     <main class="bg-[#122C4F] text-[#FBF9E4] px-6 py-10">
         <div class="max-w-7xl mx-auto space-y-6">
 
-            {{-- Single search bar with instant suggestions + Clear --}}
+        
             <div class="relative bg-[#0f203d] text-[#FBF9E4] rounded-2xl p-4 md:p-5 shadow-lg space-y-4"
                 wire:key="search-form-{{ $formVersion }}">
                 <div class="flex flex-col md:flex-row gap-3 md:items-center">
@@ -32,7 +32,7 @@
                                     <div class="h-px bg-[#ddd] mx-3 my-1"></div>
                                 @endif
 
-                                {{-- product name suggestions (make them links so they ALWAYS work) --}}
+                                {{-- product name suggestions  --}}
                                 @foreach(($suggestions ?? collect()) as $s)
                                     <a href="{{ route('products.show', $s->id) }}"
                                         class="block w-full text-left px-3 py-2 hover:bg-[#EBEBE0] flex items-center gap-3">
@@ -53,7 +53,7 @@
                     </div>
                 </div>
 
-                {{-- inline filters (apply instantly) --}}
+                {{-- inline filters --}}
                 <div class="grid md:grid-cols-4 gap-3">
                     <div>
                         <label class="block mb-1 text-sm opacity-80">Category</label>

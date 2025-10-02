@@ -1,5 +1,5 @@
 <x-layouts.site>
-    <x-site.navbar />
+    
     <main class="px-6 py-10">
         <div class="max-w-6xl mx-auto">
             <div class="flex items-center justify-between">
@@ -77,5 +77,5 @@
             </div>
         </div>
     </main>
-    <x-site.footer />
+    
 </x-layouts.site>

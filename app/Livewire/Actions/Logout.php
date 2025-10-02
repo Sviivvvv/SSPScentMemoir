@@ -7,16 +7,12 @@ use Illuminate\Support\Facades\Session;
 
 class Logout
 {
-    /**
-     * Log the current user out of the application.
-     */
     public function __invoke()
     {
         Auth::guard('web')->logout();
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
 
-        Session::invalidate();
-        Session::regenerateToken();
-
-        return redirect('/');
+        return redirect()->route('home');
     }
 }

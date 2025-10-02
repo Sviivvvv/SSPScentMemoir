@@ -48,7 +48,7 @@ class ProductSearch extends Component
         return array_values(array_unique(array_merge($fromTable, $legacy)));
     }
 
-    /** ----- Suggestions (computed) ----- */
+    /** ----- Suggestions  ----- */
     public function getSuggestionsProperty()
     {
         $term = trim($this->q);
@@ -118,7 +118,7 @@ class ProductSearch extends Component
             })
             ->select(['id', 'name', 'price', 'image_path', 'category', 'category_id', 'created_at']);
 
-        // category filter (case-insensitive, table or legacy column)
+        // category filter 
         if ($this->category !== '') {
             $lc = mb_strtolower($this->category);
             $builder->where(function ($w) use ($lc) {

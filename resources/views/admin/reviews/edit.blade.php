@@ -1,5 +1,5 @@
 <x-layouts.site>
-    <x-site.navbar />
+    
     <main class="px-6 py-10">
         <div class="max-w-3xl mx-auto">
             <h1 class="text-2xl font-bold mb-6">Edit Review</h1>
@@ -68,5 +68,5 @@
             </form>
         </div>
     </main>
-    <x-site.footer />
+  
 </x-layouts.site>

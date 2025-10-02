@@ -36,15 +36,19 @@
                         </div>
 
                         {{-- qty controls (never shrink) --}}
-                        <div class="flex items-center gap-2 justify-self-center shrink-0">
-                            <button wire:click="decrement({{ $p->id }})" wire:loading.attr="disabled"
-                                aria-label="Decrease quantity"
-                                class="h-10 w-10 rounded bg-[#FBF9E4] text-[#122C4F] font-bold">−</button>
-                            <span class="w-6 text-center">{{ $row['qty'] }}</span>
-                            <button wire:click="increment({{ $p->id }})" wire:loading.attr="disabled"
-                                aria-label="Increase quantity"
-                                class="h-10 w-10 rounded bg-[#FBF9E4] text-[#122C4F] font-bold">+</button>
-                        </div>
+                        @if(!$row['product']->is_subscription)
+                            <div class="flex items-center gap-3">
+                                <button wire:click="decrement({{ $row['product']->id }})"
+                                    class="px-3 py-2 rounded bg-[#FBF9E4] text-[#122C4F]">−</button>
+                                <span class="min-w-6 text-center">{{ $row['qty'] }}</span>
+                                <button wire:click="increment({{ $row['product']->id }})"
+                                    class="px-3 py-2 rounded bg-[#FBF9E4] text-[#122C4F]">+</button>
+                            </div>
+                        @else
+                            <div class="text-sm px-2 py-1 rounded bg-[#FBF9E4] text-[#122C4F] font-semibold">
+                                Subscription • Qty 1
+                            </div>
+                        @endif
 
                         {{-- line total --}}
                         <div class="font-semibold whitespace-nowrap justify-self-end">

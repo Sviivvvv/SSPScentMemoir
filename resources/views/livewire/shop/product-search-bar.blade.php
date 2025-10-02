@@ -42,7 +42,6 @@
                 Filters
             </button>
 
-            {{-- ✅ call the renamed method and prevent default --}}
             <button type="button" wire:click.prevent="clearFilters" wire:loading.attr="disabled"
                 class="px-4 py-2 rounded bg-transparent border border-[#FBF9E4]/40 font-semibold hover:bg-[#FBF9E4]/10">
                 Clear
@@ -57,7 +56,7 @@
 
 
     @if($showFilters)
-        {{-- 👇 bump this key so inputs remount with blank/default values --}}
+        
         <div class="grid md:grid-cols-4 gap-3" wire:key="filters-{{ $filtersVersion }}">
             <div>
                 <label class="block mb-1 text-sm opacity-80">Category</label>
@@ -88,7 +87,7 @@
                     <option value="latest">Latest</option>
                     <option value="price_asc">Price: Low → High</option>
                     <option value="price_desc">Price: High → Low</option>
-                    <option value="name">Name A–Z</option>
+                    <option value="name">Name A-Z</option>
                 </select>
             </div>
         </div>

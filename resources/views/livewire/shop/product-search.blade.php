@@ -24,7 +24,7 @@
                 <option value="latest">Latest</option>
                 <option value="price_asc">Price: Low → High</option>
                 <option value="price_desc">Price: High → Low</option>
-                <option value="name">Name A–Z</option>
+                <option value="name">Name A-Z</option>
             </select>
         </div>
     </div>

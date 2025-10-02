@@ -9,7 +9,7 @@
                 <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="w-full h-auto object-contain">
             </div>
 
-            {{-- Info + Add to Cart --}}
+            {{-- Info and Add to Cart --}}
             <div>
                 <h1 class="text-3xl font-bold mb-2">{{ $product->name }}</h1>
                 <p class="opacity-80 mb-4 capitalize">
@@ -21,7 +21,7 @@
                     <p class="mb-6 max-w-prose">{{ $product->description }}</p>
                 @endif
 
-                {{-- Livewire widget (session cart for now) --}}
+                {{-- Livewire session cart ) --}}
                 <livewire:cart.add-to-cart :product-id="$product->id" />
             </div>
         </div>

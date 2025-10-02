@@ -23,31 +23,25 @@ class AddToCart extends Component
     {
         $this->validate();
 
-        // Guard: don't allow deleted/subscription products
-        $ok = Product::query()
-            ->whereKey($this->productId)
-            ->whereNull('deleted_at')
-            ->where(function ($q) {
-                $q->whereNull('is_subscription')
-                    ->orWhere('is_subscription', false);
-            })
-            ->exists();
-
-        if (!$ok) {
-            $this->addError('qty', 'Sorry, this product cannot be added to the cart.');
+        $product = Product::find($this->productId);
+        if (!$product) {
+            $this->addError('qty', 'This product no longer exists.');
             return;
         }
 
+        // Let CartManager handle subscriptions vs. normal
         $cart->add($this->productId, $this->qty);
 
         // Update navbar badge
         $this->dispatch('cart-updated');
 
-        // Optional flash (your Blade already shows session('status'))
+        // Feedback
         session()->flash('status', 'Added to cart');
 
-        // Reset qty
-        $this->qty = 1;
+        // Reset qty (non-subscriptions only)
+        if (!$product->is_subscription) {
+            $this->qty = 1;
+        }
     }
 
     public function render()

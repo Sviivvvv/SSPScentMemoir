@@ -70,4 +70,56 @@ class ProductController extends Controller
 
         return view('products.show', compact('product', 'recommendations'));
     }
+
+
+
+    //mongo api
+
+    // list products (search/sort/pagination)
+    public function apiProducts(\Illuminate\Http\Request $req)
+    {
+        $page = max((int) $req->input('page', 1), 1);
+        $size = min(max((int) $req->input('size', 12), 1), 50);
+
+        $q = \App\Models\Mongo\Product::query()
+            ->when($req->filled('search'), fn($qq) =>
+                $qq->where(fn($w) => $w->where('name', 'like', '%' . $req->search . '%')
+                    ->orWhere('category', 'like', '%' . $req->search . '%')))
+            ->when($req->filled('category_id'), fn($qq) => $qq->where('category_id', (int) $req->category_id));
+
+        $q = match ($req->input('sort')) {
+            'price_asc' => $q->orderBy('price', 'asc'),
+            'price_desc' => $q->orderBy('price', 'desc'),
+            'new' => $q->orderBy('created_at', 'desc'),
+            default => $q->orderBy('name', 'asc'),
+        };
+
+        $data = $q->skip(($page - 1) * $size)->take($size)->get();
+        return response()->json(['data' => $data, 'page' => $page, 'size' => $size]);
+    }
+
+    // one product by SQL id mirrored in Mongo
+    public function apiProduct($id)
+    {
+        $p = \App\Models\Mongo\Product::where('mysql_id', (int) $id)->first();
+        return $p ? response()->json($p) : response()->json(['message' => 'Not found'], 404);
+    }
+
+    // list categories
+    public function apiCategories()
+    {
+        return \App\Models\Mongo\Category::orderBy('name')->get();
+    }
+
+    // list products of one category
+    public function apiCategoryProducts($categoryId, \Illuminate\Http\Request $req)
+    {
+        $page = max((int) $req->input('page', 1), 1);
+        $size = min(max((int) $req->input('size', 12), 1), 50);
+
+        $data = \App\Models\Mongo\Product::where('category_id', (int) $categoryId)
+            ->orderBy('name')->skip(($page - 1) * $size)->take($size)->get();
+
+        return response()->json(['data' => $data, 'page' => $page, 'size' => $size]);
+    }
 }

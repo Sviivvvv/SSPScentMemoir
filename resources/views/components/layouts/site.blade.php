@@ -23,9 +23,9 @@
 </head>
 
 <body class="bg-[#122C4F] text-[#FBF9E4] min-h-screen overflow-x-hidden">
-
+    
     {{-- header --}}
-    <x-site.navbar />
+    <x-site.header />
 
     {{-- page content --}}
     <main class="min-h-[60vh]">
@@ -35,7 +35,7 @@
     {{-- footer --}}
     <x-site.footer />
 
-    @livewireScripts(['navigate' => false])
+    @livewireScripts(['navigate' => true])
 </body>
 
 </html>

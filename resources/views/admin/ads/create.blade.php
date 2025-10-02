@@ -1,59 +1,94 @@
 <x-layouts.site>
-    <x-site.navbar />
-    <main class="px-6 py-10">
+    <main class="bg-[#122C4F] text-[#FBF9E4] px-6 py-10 min-h-screen">
         <div class="max-w-3xl mx-auto">
-            <h1 class="text-2xl font-bold mb-6">New Ad</h1>
+            <div class="flex items-center justify-between mb-6">
+                <h1 class="text-3xl font-bold">New Product</h1>
+                <a wire:navigate href="{{ route('admin.products.index') }}" class="underline">← Back to list</a>
+            </div>
 
-            @if ($errors->any())
-                <div class="bg-red-600/20 text-red-100 px-4 py-2 rounded mb-4">
-                    <ul class="list-disc list-inside">
-                        @foreach ($errors->all() as $e) <li>{{ $e }}</li> @endforeach
-                    </ul>
+            @if (session('status'))
+                <div class="mb-4 px-4 py-2 rounded bg-green-600/20 text-green-200">
+                    {{ session('status') }}
                 </div>
             @endif
 
-            <form action="{{ route('admin.ads.store') }}" method="POST" enctype="multipart/form-data"
-                class="bg-[#FBF9E4] text-[#122C4F] p-6 rounded-xl">
+            @if ($errors->any())
+                <div class="mb-4 px-4 py-3 rounded bg-red-600/20 text-red-100">
+                    <div class="font-semibold mb-1">Please fix the following:</div>
+                    <ul class="list-disc list-inside">
+                        @foreach ($errors->all() as $e)
+                            <li>{{ $e }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif>
+
+            <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data"
+                class="bg-[#0f203d] rounded-2xl p-6 shadow">
                 @csrf
 
-                <label class="block mb-3">
-                    <span class="font-semibold">Title</span>
-                    <input type="text" name="title" value="{{ old('title') }}"
-                        class="w-full mt-1 p-2 rounded bg-[#EBEBE0]">
-                </label>
-
-                <label class="block mb-4">
-                    <span class="font-semibold">Link</span>
-                    <div class="mt-1">
-                        <livewire:admin.ads.link-picker :initial-url="old('link_url')" />
+                <div class="grid grid-cols-1 gap-5">
+                    {{-- Name --}}
+                    <div>
+                        <label class="block mb-1 font-semibold">Name</label>
+                        <input name="name" value="{{ old('name') }}" required
+                            class="w-full px-3 py-2 rounded bg-[#FBF9E4] text-[#122C4F]">
                     </div>
-                    <p class="mt-2 text-xs opacity-80">Tip: choose “Link to a Product” and search; or switch to “Custom
-                        URL”.</p>
-                </label>
 
-                <label class="block mb-3">
-                    <span class="font-semibold">Sort order</span>
-                    <input type="number" name="sort_order" value="{{ old('sort_order', 0) }}"
-                        class="w-full mt-1 p-2 rounded bg-[#EBEBE0]">
-                </label>
+                    {{-- Price --}}
+                    <div>
+                        <label class="block mb-1 font-semibold">Price (LKR)</label>
+                        <input name="price" type="number" step="0.01" min="0" value="{{ old('price') }}" required
+                            class="w-full px-3 py-2 rounded bg-[#FBF9E4] text-[#122C4F]">
+                    </div>
 
-                <label class="block mb-3">
-                    <span class="font-semibold">Active</span>
-                    <input type="checkbox" name="is_active" value="1" class="ml-2" {{ old('is_active', true) ? 'checked' : '' }}>
-                </label>
+                    {{-- Category / Subscription --}}
+                    <div class="grid sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block mb-1 font-semibold">Category</label>
+                            <select name="category" class="w-full px-3 py-2 rounded bg-[#FBF9E4] text-[#122C4F]">
+                                <option value="">— none —</option>
+                                <option value="men" @selected(old('category') === 'men')>Men</option>
+                                <option value="women" @selected(old('category') === 'women')>Women</option>
+                                <option value="limited" @selected(old('category') === 'limited')>Limited</option>
+                            </select>
+                            <p class="mt-1 text-xs opacity-70">Leave empty for subscription products.</p>
+                        </div>
 
-                <label class="block mb-6">
-                    <span class="font-semibold">Image (required)</span>
-                    <input type="file" name="image" accept="image/*" class="w-full mt-1 p-2 rounded bg-[#EBEBE0]"
-                        required>
-                </label>
+                        <div class="flex items-end">
+                            <label class="inline-flex items-center gap-2">
+                                <input type="checkbox" name="is_subscription" value="1"
+                                    @checked(old('is_subscription'))>
+                                <span>Is Subscription</span>
+                            </label>
+                        </div>
+                    </div>
 
-                <div class="flex gap-3">
-                    <button class="bg-[#122C4F] text-[#FBF9E4] px-6 py-2 rounded">Create</button>
-                    <a href="{{ route('admin.ads.index') }}" class="underline">Cancel</a>
+                    {{-- Description --}}
+                    <div>
+                        <label class="block mb-1 font-semibold">Description</label>
+                        <textarea name="description" rows="5"
+                            class="w-full px-3 py-2 rounded bg-[#FBF9E4] text-[#122C4F]">{{ old('description') }}</textarea>
+                    </div>
+
+                    {{-- Image --}}
+                    <div>
+                        <label class="block mb-1 font-semibold">Image</label>
+                        <input type="file" name="image" accept="image/*"
+                            class="w-full text-sm file:mr-3 file:px-3 file:py-1 file:rounded file:border-0 file:bg-[#FBF9E4] file:text-[#122C4F]">
+                        <p class="mt-1 text-xs opacity-70">PNG/JPG up to 5MB. Stored at <code>storage/products</code>.
+                        </p>
+                    </div>
+
+                    <div class="pt-2 flex items-center gap-3">
+                        <a wire:navigate href="{{ route('admin.products.index') }}"
+                            class="px-4 py-2 rounded border border-[#FBF9E4]/30 hover:bg-[#FBF9E4]/10">Cancel</a>
+                        <button class="px-4 py-2 rounded bg-[#FBF9E4] text-[#122C4F] font-semibold hover:opacity-90">
+                            Create
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>
     </main>
-    <x-site.footer />
 </x-layouts.site>

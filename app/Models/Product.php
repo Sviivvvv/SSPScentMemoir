@@ -4,20 +4,21 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class Product extends Model
 {
-    use SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $table = 'products';
 
     protected $fillable = [
         'name',
         'price',
-        'category_id',   // FK -> categories.id
-        'category',      // legacy label kept for compatibility
+        'category_id',
+        'category',       // legacy label kept for compatibility
         'description',
         'image_path',
         'is_subscription',
@@ -28,73 +29,107 @@ class Product extends Model
         'is_subscription' => 'boolean',
     ];
 
+    // If you want these when array/JSON casting:
+    protected $appends = ['image_url', 'category_name'];
 
+    /* -------------------- Accessors -------------------- */
 
-
-    public function getCategoryNameAttribute(): string
-    {
-        return $this->categoryRef?->name ?? ($this->category ?? 'Uncategorized');
-    }
-    /** Resolve image whether stored on disk or legacy /src/... */
     public function getImageUrlAttribute(): string
     {
-        $p = trim((string) ($this->image_path ?? ''));
+        $p = trim((string) $this->image_path);
 
         if ($p === '') {
-            return asset('/placeholder.png');
+            // Put a file at public/images/placeholder.png (or change the path)
+            return asset('images/placeholder.png');
         }
 
-        // Stored on the public disk -> serve via /storage/...
+        // Stored via store('products','public') => "products/..."
         if (Str::startsWith($p, ['products/', 'ads/', 'reviews/'])) {
-            return Storage::url($p);
+            return Storage::url($p); // => /storage/products/...
         }
 
-        // Absolute or site-rooted paths already fine
+        // Absolute or site-relative
         if (Str::startsWith($p, ['http://', 'https://', '/'])) {
             return $p;
         }
 
-        // Legacy assets under /public/src/... (from first semester)
-        return asset('/' . ltrim(str_replace('\\', '/', $p), '/'));
+        // Legacy paths from /public/... (first-semester assets)
+        return asset($p);
     }
 
-    /** Relations */
+    public function getCategoryNameAttribute(): string
+    {
+        return $this->categoryRef?->name ?? ($this->category ?: 'Uncategorized');
+    }
+
+    /* -------------------- Relationships -------------------- */
+
     public function categoryRef()
     {
-        return $this->belongsTo(Category::class, 'category_id', 'id');
+        return $this->belongsTo(Category::class, 'category_id');
     }
 
     public function orderItems()
     {
-        return $this->hasMany(OrderItem::class, 'product_id', 'id');
+        return $this->hasMany(OrderItem::class, 'product_id');
     }
 
-    /** Scopes */
+    // Optional – only if you created App\Models\Subscription
+    public function subscription()
+    {
+        return $this->hasOne(Subscription::class, 'product_id');
+    }
+
+    /* -------------------- Scopes -------------------- */
+
     public function scopeCategoryName($q, string $name)
     {
         $lc = mb_strtolower($name);
 
         return $q->where(function ($w) use ($lc) {
             $w->whereRaw('LOWER(category) = ?', [$lc])
-                ->orWhereHas('categoryRef', fn($c) => $c->whereRaw('LOWER(name) = ?', [$lc]));
+              ->orWhereHas('categoryRef', fn ($c) => $c->whereRaw('LOWER(name) = ?', [$lc]));
         });
     }
 
     public function scopeLimited($q)
     {
-        return $q->where(function ($w) {
-            $w->whereRaw('LOWER(category) = ?', ['limited'])
-                ->orWhereHas('categoryRef', fn($c) => $c->whereRaw('LOWER(name) = ?', ['limited']));
-        });
+        return $q->categoryName('limited');
     }
+
     public function scopeMen($q)
     {
-        return $this->scopeCategoryName($q, 'men');
+        return $q->categoryName('men');
     }
+
     public function scopeWomen($q)
     {
-        return $this->scopeCategoryName($q, 'women');
+        return $q->categoryName('women');
     }
 
+    public function scopeSubscriptions($q)
+    {
+        return $q->where('is_subscription', true);
+    }
 
+    public function scopeNonSubscriptions($q)
+    {
+        return $q->where(function ($w) {
+            $w->where('is_subscription', false)
+              ->orWhereNull('is_subscription');
+        });
+    }
+
+    /* -------------------- Model events -------------------- */
+
+    protected static function booted()
+    {
+        static::saving(function (Product $p) {
+            // Keep categories empty for subscriptions so they don't leak into Men/Women/Limited lists
+            if ($p->is_subscription) {
+                $p->category_id = null;
+                $p->category    = null;
+            }
+        });
+    }
 }
