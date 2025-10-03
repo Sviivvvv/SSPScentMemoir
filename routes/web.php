@@ -145,5 +145,12 @@ Route::get('/dashboard', function () {
 //     });
 // }
 
+
+
+Route::get('/health', function () {
+    try { DB::connection()->getPdo(); return 'ok'; }
+    catch (\Throwable $e) { return response('db error: '.$e->getMessage(), 500); }
+});
+
 // keep Breeze’s auth routes
 require __DIR__ . '/auth.php';
