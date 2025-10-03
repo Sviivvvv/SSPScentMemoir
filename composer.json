@@ -18,7 +18,8 @@
         "livewire/flux": "^2.1.1",
         "livewire/livewire": "^3.6.4",
         "livewire/volt": "^1.7.0",
-        "mongodb/laravel-mongodb": "^5.5"
+        "mongodb/laravel-mongodb": "^5.5",
+          "mongodb/mongodb": "^2.1" 
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -70,7 +71,10 @@
     },
     "extra": {
         "laravel": {
-            "dont-discover": []
+            "dont-discover": [
+
+                "mongodb/laravel-mongodb" 
+            ]
         }
     },
     "config": {
@@ -80,7 +84,11 @@
         "allow-plugins": {
             "pestphp/pest-plugin": true,
             "php-http/discovery": true
-        }
+        },
+        "platform": {
+      "php": "8.2.0",
+      "ext-mongodb": "2.1.1"    
+    }
     },
     "minimum-stability": "stable",
     "prefer-stable": true

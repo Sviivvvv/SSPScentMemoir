@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "39e68a8a5b0211826e04008fba65404b",
+    "content-hash": "4f55ba7ba170edc0a65f026c9f59f98e",
     "packages": [
         {
             "name": "blade-ui-kit/blade-icons",
@@ -9997,5 +9997,9 @@
         "php": "^8.2"
     },
     "platform-dev": {},
+    "platform-overrides": {
+        "php": "8.2.0",
+        "ext-mongodb": "2.1.1"
+    },
     "plugin-api-version": "2.6.0"
 }
