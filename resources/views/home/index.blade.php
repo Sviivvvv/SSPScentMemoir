@@ -1,6 +1,6 @@
 <x-layouts.site>
 
-
+<script src="https://cdn.tailwindcss.com"></script>
     <main class="px-6 py-10">
 
         {{-- ADS --}}

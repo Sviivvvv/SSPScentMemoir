@@ -19,11 +19,12 @@
     </style>
 
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     @livewireStyles
 </head>
 
 <body class="bg-[#122C4F] text-[#FBF9E4] min-h-screen overflow-x-hidden">
-    
+
     {{-- header --}}
     <x-site.header />
 
