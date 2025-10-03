@@ -56,7 +56,7 @@
             </div>
         </div>
 
-        {{-- light dashboard panel --}}
+        {{--  dashboard panel --}}
         <div
             class="max-w-7xl mx-auto mt-8 bg-[#faf7f1] text-slate-900 rounded-2xl p-5 md:p-6 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.3)]">
             <div class="flex gap-2 mb-5">
@@ -100,7 +100,7 @@
                 </div>
             </div>
 
-            {{-- two-column: recent orders + top products --}}
+            {{-- recent orders + top products --}}
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 {{-- Recent Orders --}}
                 <div class="bg-white border border-slate-200 rounded-xl p-4">
