@@ -3,7 +3,7 @@
     "dockerfilePath": "./dockerfile"
   },
   "deploy": {
-    "startCommand": "apache2-foreground"
+    "startCommand": "php -d variables_order=EGPCS -S 0.0.0.0:$PORT -t public server.php"
   },
   "variables": [
     "APP_KEY",
