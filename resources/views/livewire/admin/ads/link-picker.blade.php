@@ -64,7 +64,5 @@
                 class="w-full mt-1 p-2 rounded bg-[#EBEBE0] text-[#122C4F]">
         </label>
     @endif
-
-    {{-- Hidden input submitted with the parent form --}}
     <input type="hidden" name="link_url" value="{{ $linkUrl }}">
 </div>
