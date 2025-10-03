@@ -1,4 +1,5 @@
 <x-layouts.site>
+    
     <main class="px-6 py-10">
         @php
             $tz = config('app.timezone', 'UTC');

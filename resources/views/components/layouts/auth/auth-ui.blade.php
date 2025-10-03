@@ -12,6 +12,7 @@
         body { font-family: 'Garamond', serif; }
         div::-webkit-scrollbar { display: none; }
     </style>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-[#122C4F] text-[#FBF9E4] min-h-screen overflow-x-hidden max-w-screen">
 

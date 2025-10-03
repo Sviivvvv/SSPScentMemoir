@@ -8,6 +8,7 @@
             font-family: 'Garamond', serif;
         }
     </style>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="min-h-screen antialiased bg-[#122C4F] text-[#FBF9E4]">
